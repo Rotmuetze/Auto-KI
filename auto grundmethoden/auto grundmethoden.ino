@@ -26,10 +26,10 @@ int in3 = D7;
 int in4 = D6;
 int GSM2 = D5;
 
-int maxspeed = 150;
 String command = "";
 boolean drive = false;
 int oledzähler = 0;
+int tagzähler = 0;
 void setup() {
 
   Serial.begin(115200);
@@ -84,15 +84,10 @@ void loop() {
 
   if (huskylens.request()) {      //Besteht eine I2C Verbindung mit der Huskylens?
     if (huskylens.isLearned()) {  //Hat die Huskylens irgendwas gelernt / sich schon was gemerkt?
-      if (huskylens.available()) {
+
         while (huskylens.available() > 0) {  //Solange die Huskylens mehr als 0 Objekte vor sich erkennt...
           HUSKYLENSResult result = huskylens.read();
           if (result.xTarget <= 179 && result.xTarget >= 141) {
-          if (!drive) {
-          Serial.println("anfahren");
-          anfahren(200);
-          command = "anfahren";
-          }
           digitalWrite(in1, 0);
           digitalWrite(in2, 1);
           digitalWrite(in3, 0);
@@ -124,70 +119,61 @@ void loop() {
         display.setCursor(0,0);
         display.setTextSize(2);
         display.println("---AUTO---");
-        display.setTextSize(1);
-        display.println("ausgefuehrt:");
-        display.setTextSize(2);
         display.println(command);
         display.display();
                
        
        
         }
-      }}
+      }
+      //tag
+      tagzähler++;
+      if (tagzähler == 10) {
+      huskylens.writeAlgorithm(ALGORITHM_TAG_RECOGNITION);
+      if (huskylens.isLearned()) {
+      if (huskylens.available() > 0) {
+      HUSKYLENSResult resulttag = huskylens.read();
+      motoroff(100);
+      if (resulttag.ID == 1) {
+      tank(100);
+
+      }
+      if (resulttag.ID == 2) {
+      shake(100);
+      }
+      }
+      }
+      }
+      huskylens.writeAlgorithm(ALGORITHM_LINE_TRACKING);
+      motoroff(2000);
     }
 
-    
-  }
+    }
+  
 
-
-
-void anfahren(int max) {
+void motoroff(int time){
   
   digitalWrite(in1, 0);
-  digitalWrite(in2, 1);
+  digitalWrite(in2, 0);
   analogWrite(GSM1, 0);
 
   digitalWrite(in3, 0);
-  digitalWrite(in4, 1);
+  digitalWrite(in4, 0);
   analogWrite(GSM2, 0);
+  delay(time);
 
-  for (int i = 50; i <= max; i = i + 10) {
-    analogWrite(GSM1, i);
-    analogWrite(GSM2, i);
-    delay(100);
-
-
-    Serial.println(i);
-  }
-  drive = true;
-}
-
-
-
-
-void bremsen(int von, int bis) {
-
-  for (int i = von; i >= bis; i = i - 10) {
-    analogWrite(GSM1, i);
-    analogWrite(GSM2, i);
-    delay(100);
-    Serial.println(i);
-  }
-  if (bis == 0) {
-  drive = false;
-  }
 }
 
 void rechts(){
   digitalWrite(in1, 0);
   digitalWrite(in2, 1);
   
-  analogWrite(GSM1, 150);
+  analogWrite(GSM1, 125);
 
   digitalWrite(in3, 0);
   digitalWrite(in4, 0);
 
-  analogWrite(GSM2, 200);
+  analogWrite(GSM2, 175);
   
   delay(5);
 }
@@ -196,25 +182,56 @@ void links(){
   digitalWrite(in1, 0);
   digitalWrite(in2, 0);
   
-  analogWrite(GSM1, 150);
+  analogWrite(GSM1, 125);
 
   digitalWrite(in3, 0);
   digitalWrite(in4, 1);
 
-  analogWrite(GSM2, 150);
+  analogWrite(GSM2, 125);
   
   delay(5);
 }
 
-void easteregg(int speed){
+void tank(int speed){
   digitalWrite(in1, 1);
   digitalWrite(in2, 0);
   digitalWrite(in3, 0);
   digitalWrite(in4, 1);
   analogWrite(GSM1, 200);
   analogWrite(GSM2, 200);
+  delay(2000);
 
-  delay(5000);
+  digitalWrite(in1, 0);
+  digitalWrite(in2, 1);
+  digitalWrite(in3, 1);
+  digitalWrite(in4, 0);
+
+  delay(2000);
+
+
+  digitalWrite(in1, 1);
+  digitalWrite(in2, 0);
+  digitalWrite(in3, 1);
+  digitalWrite(in4, 0);
+  analogWrite(GSM1, speed);
+  analogWrite(GSM2, speed);  
+}
+
+void shake(int speed){
+   digitalWrite(in1, 1);
+  digitalWrite(in2, 0);
+  digitalWrite(in3, 0);
+  digitalWrite(in4, 1);
+  analogWrite(GSM1, 200);
+  analogWrite(GSM2, 200);
+  delay(50);
+
+  digitalWrite(in1, 0);
+  digitalWrite(in2, 1);
+  digitalWrite(in3, 1);
+  digitalWrite(in4, 0);
+
+  delay(50);
 
   digitalWrite(in1, 1);
   digitalWrite(in2, 0);

@@ -67,6 +67,7 @@ void setup() {
   display.setTextColor(SSD1306_WHITE);
   display.setTextSize(1);
   display.clearDisplay();
+  display.display();
 
 
   pinMode(GSM1, OUTPUT);
@@ -188,5 +189,6 @@ void rechts(){
   delay(5);
 }
 
+void ausgabe
 
   

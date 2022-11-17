@@ -29,6 +29,7 @@ int GSM2 = D5;
 int maxspeed = 150;
 String command = "";
 boolean drive = false;
+int oledzähler = 0;
 void setup() {
 
   Serial.begin(115200);
@@ -62,6 +63,7 @@ void setup() {
 
   // Clear the buffer
   display.clearDisplay();
+  display.display();
 
   display.setCursor(0, 0);
   display.setTextColor(SSD1306_WHITE);
@@ -90,42 +92,57 @@ void loop() {
           Serial.println("anfahren");
           anfahren(200);
           command = "anfahren";
-
           }
           digitalWrite(in1, 0);
           digitalWrite(in2, 1);
           digitalWrite(in3, 0);
           digitalWrite(in4, 1);
 
-          analogWrite(GSM1, 200);
-          analogWrite(GSM2, 200);
+          analogWrite(GSM1, 100);
+          analogWrite(GSM2, 100);          
           delay(10);
           command = "fahren";
           Serial.println("fahren");
           }
        
-          else if (result.xTarget <=130 && result.xTarget >= 0) {
+          else if (result.xTarget <=110 && result.xTarget >= 0) {
             Serial.println("links");
             command = "links";
-            rechts();
+            links();
           
           }
 
-         else if (result.xTarget >= 190) {
+         else if (result.xTarget >= 210) {
            Serial.println("rechts");
             command = "rechts";
-          links();
+          rechts();
             
           }
           huskylens.customText(command, 20, 20);
+
+        display.clearDisplay();
+        display.setCursor(0,0);
+        display.setTextSize(2);
+        display.println("---AUTO---");
+        display.setTextSize(1);
+        display.println("ausgefuehrt:");
+        display.setTextSize(2);
+        display.println(command);
+        display.display();
+               
+       
+       
         }
       }}
     }
+
+    
   }
 
 
 
 void anfahren(int max) {
+  
   digitalWrite(in1, 0);
   digitalWrite(in2, 1);
   analogWrite(GSM1, 0);
@@ -161,7 +178,7 @@ void bremsen(int von, int bis) {
   }
 }
 
-void links(){
+void rechts(){
   digitalWrite(in1, 0);
   digitalWrite(in2, 1);
   
@@ -175,7 +192,7 @@ void links(){
   delay(5);
 }
 
-void rechts(){
+void links(){
   digitalWrite(in1, 0);
   digitalWrite(in2, 0);
   
@@ -189,6 +206,22 @@ void rechts(){
   delay(5);
 }
 
-void ausgabe
+void easteregg(int speed){
+  digitalWrite(in1, 1);
+  digitalWrite(in2, 0);
+  digitalWrite(in3, 0);
+  digitalWrite(in4, 1);
+  analogWrite(GSM1, 200);
+  analogWrite(GSM2, 200);
+
+  delay(5000);
+
+  digitalWrite(in1, 1);
+  digitalWrite(in2, 0);
+  digitalWrite(in3, 1);
+  digitalWrite(in4, 0);
+  analogWrite(GSM1, speed);
+  analogWrite(GSM2, speed);  
+}
 
   

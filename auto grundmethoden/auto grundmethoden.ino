@@ -102,7 +102,7 @@ void loop() {
         display.clearDisplay();
         display.setCursor(0, 0);
         display.setTextSize(2);
-        display.println("---AUTO---");
+        display.println("-DAS-AUTO-");
         display.println(command);
         display.display();
       }
@@ -110,7 +110,8 @@ void loop() {
   }
 }
 
-void fahren(){                      //fahren motorsteuerrung
+void fahren(){        
+               //fahren motorsteuerrung
  digitalWrite(in1, 0);
           digitalWrite(in2, 1);
           digitalWrite(in3, 0);

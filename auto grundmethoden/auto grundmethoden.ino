@@ -116,34 +116,35 @@ void fahren(){                      //fahren motorsteuerrung
           digitalWrite(in3, 0);
           digitalWrite(in4, 1);
 
-          analogWrite(GSM1, 100);
-          analogWrite(GSM2, 100);
-          delay(10);
+          analogWrite(GSM1, 175);
+          analogWrite(GSM2, 175);
+          delay(1);
+          
 }
 void rechts() {                      //rechts motorsteuerung
   digitalWrite(in1, 0);
   digitalWrite(in2, 1);
 
-  analogWrite(GSM1, 125);
+  analogWrite(GSM1, 150);
 
   digitalWrite(in3, 0);
   digitalWrite(in4, 0);
 
-  analogWrite(GSM2, 125);
+  analogWrite(GSM2, 150);
 
-  delay(5);
+  delay(1);
 }
 
 void links() {                    //links motorsteuerung
   digitalWrite(in1, 0);
   digitalWrite(in2, 0);
 
-  analogWrite(GSM1, 125);
+  analogWrite(GSM1, 150);
 
   digitalWrite(in3, 0);
   digitalWrite(in4, 1);
 
-  analogWrite(GSM2, 125);
+  analogWrite(GSM2, 175);
 
-  delay(5);
+  delay(1);
 }

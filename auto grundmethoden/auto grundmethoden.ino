@@ -131,7 +131,7 @@ void loop() {
       if (tagzähler == 10) {
       huskylens.writeAlgorithm(ALGORITHM_TAG_RECOGNITION);
       if (huskylens.isLearned()) {
-      if (huskylens.available() > 0) {
+      while (huskylens.available() > 0) {
       HUSKYLENSResult resulttag = huskylens.read();
       motoroff(100);
       if (resulttag.ID == 1) {
@@ -173,7 +173,7 @@ void rechts(){
   digitalWrite(in3, 0);
   digitalWrite(in4, 0);
 
-  analogWrite(GSM2, 175);
+  analogWrite(GSM2, 125);
   
   delay(5);
 }
